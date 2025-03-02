@@ -17,7 +17,13 @@
 let
   overlays = [ (import rust) ];
   pkgs = import nixpkgs { inherit system overlays; };
-  toolchain' = if toolchain != null then toolchain else pkgs.rust-bin.stable.latest.minimal;
+  toolchain' =
+    if toolchain != null then
+      toolchain
+    else
+      pkgs.rust-bin.stable.latest.minimal.override {
+        extensions = [ "rustfmt" ];
+      };
 
   cargo-pgrx = self.packages.${system}.cargo-pgrx;
   craneLib = (crane.mkLib pkgs).overrideToolchain toolchain';
