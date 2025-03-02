@@ -5,11 +5,21 @@
 let
   rustToolchain = pkgs.rust-bin.stable.latest.minimal;
   craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+
+  src = pkgs.fetchFromGitHub {
+    owner = "pgcentralfoundation";
+    repo = "pgrx";
+    tag = "v0.13.1";
+    hash = "sha256-2g3MK3+OJFYpNRq4uNRNoWsufOV6gBT5BNAcE129Zuk=";
+  };
 in
 craneLib.buildPackage {
-  #src = ./.;
+  src = "${src}";
 
-  inherit (craneLib.crateNameFromCargoToml { cargoToml = ./cargo-pgrx/Cargo.toml; }) pname version;
+  inherit (craneLib.crateNameFromCargoToml { cargoToml = "${src}/cargo-pgrx/Cargo.toml"; })
+    pname
+    version
+    ;
 
   cargoExtraArgs = "--package cargo-pgrx";
   nativeBuildInputs = [ pkgs.pkg-config ];
