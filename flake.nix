@@ -1,4 +1,6 @@
 {
+  description = "Polar is a Hemisphere's Nix Overlay and Package Distribution Mechanism";
+
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
 
@@ -16,8 +18,6 @@
     {
       self,
       utils,
-      rust,
-      crane,
       nixpkgs,
       ...
     }@inputs:
@@ -39,7 +39,7 @@
 
         packages = import ./pkgs inputs (args // { inherit callPkg; });
         checks = utils.lib.flattenTree packages;
-      in 
+      in
       {
         inherit packages checks;
       }
