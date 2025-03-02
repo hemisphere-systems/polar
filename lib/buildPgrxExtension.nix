@@ -15,6 +15,8 @@
 }:
 
 let
+  inherit (nixpkgs) stdenv lib;
+
   overlays = [ (import rust) ];
   pkgs = import nixpkgs { inherit system overlays; };
   toolchain' =
@@ -71,6 +73,7 @@ let
     CARGO = "${toolchain'}/bin/cargo";
     CARGO_BUILD_INCREMENTAL = "false";
     RUST_BACKTRACE = "full";
+    RUSTFLAGS = "${lib.optionalString stdenv.isDarwin "-Clink-args=-Wl,-undefined,dynamic_lookup"}";
   };
 
   cargoArtifacts = craneLib.buildDepsOnly craneCommonBuildArgs;
