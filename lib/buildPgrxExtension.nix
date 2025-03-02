@@ -17,10 +17,10 @@
 let
   overlays = [ (import rust) ];
   pkgs = import nixpkgs { inherit system overlays; };
-  rustToolchain = if toolchain then toolchain else pkgs.rust-bin.stable.latest.minimal;
+  toolchain' = if toolchain then toolchain else pkgs.rust-bin.stable.latest.minimal;
 
   cargo-pgrx = self.packages.${system}.cargo-pgrx;
-  craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+  craneLib = (crane.mkLib pkgs).overrideToolchain toolchain';
 
   postgresMajor = nixpkgs.lib.versions.major postgresql.version;
   cargoToml = builtins.fromTOML (builtins.readFile "${src}/Cargo.toml");
@@ -61,7 +61,7 @@ let
     '';
 
     PGRX_PG_SYS_SKIP_BINDING_REWRITE = "1";
-    CARGO = "${toolchain}/bin/cargo";
+    CARGO = "${toolchain'}/bin/cargo";
     CARGO_BUILD_INCREMENTAL = "false";
     RUST_BACKTRACE = "full";
   };
