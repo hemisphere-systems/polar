@@ -32,7 +32,7 @@ let
   cargo-pgrx = self.packages.${system}.cargo-pgrx;
   craneLib = (crane.mkLib pkgs).overrideToolchain toolchain';
 
-  postgresMajor = nixpkgs.lib.versions.major postgresql.version;
+  postgresMajor = lib.versions.major postgresql.version;
   cargoToml = builtins.fromTOML (builtins.readFile "${src}/Cargo.toml");
   name = cargoToml.package.name;
   pgrxFeatures = builtins.toString additionalFeatures;
@@ -96,7 +96,16 @@ craneLib.mkCargoDerivation (
 
     postInstall = ''
       mkdir -p $out/lib
-      cp target/release/lib${name}.so $out/lib/${name}.so
+
+      ${lib.optionalString stdenv.isDarwin ''
+        cp target/release/lib${name}.d $out/lib/${name}.d
+        cp target/release/lib${name}.dylib $out/lib/${name}.dylib
+      ''}
+
+      ${lib.optionalString stdenv.isLinux ''
+        cp target/release/lib${name}.so $out/lib/${name}.so
+      ''}
+
       mv -v $out/${postgresql.out}/* $out
       rm -rfv $out/nix
     '';
