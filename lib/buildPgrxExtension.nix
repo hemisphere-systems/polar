@@ -7,7 +7,7 @@
 }:
 
 {
-  toolchain,
+  toolchain ? null,
   system,
   src,
   postgresql,
