@@ -106,7 +106,7 @@ craneLib.mkCargoDerivation (
         cp target/release/lib${name}.so $out/lib/${name}.so
       ''}
 
-      mv -v $out/${postgresql.out}/* $out
+      # mv -v $out/${postgresql.out}/* $out
       rm -rfv $out/nix
     '';
   }
