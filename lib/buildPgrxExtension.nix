@@ -15,10 +15,12 @@
 }:
 
 let
-  inherit (nixpkgs) stdenv lib;
-
   overlays = [ (import rust) ];
   pkgs = import nixpkgs { inherit system overlays; };
+
+  inherit (nixpkgs) lib;
+  inherit (pkgs) stdenv;
+
   toolchain' =
     if toolchain != null then
       toolchain
