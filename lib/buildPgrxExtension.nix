@@ -43,8 +43,8 @@ let
 
     cp -r -L ${postgresql}/. $PGRX_HOME/${postgresMajor}/
     cp -r -L ${postgresql.dev}/. $PGRX_HOME/${postgresMajor}/dev
-    cp -r -L ${postgresql.lib}/lib/. $PGRX_HOME/${postgresMajor}/lib/
     chmod -R ugo+w $PGRX_HOME/${postgresMajor}
+    cp -r -L ${postgresql.lib}/lib/. $PGRX_HOME/${postgresMajor}/lib/
 
     ${cargo-pgrx}/bin/cargo-pgrx pgrx init \
       --pg${postgresMajor} $PGRX_HOME/${postgresMajor}/dev/bin/pg_config \
