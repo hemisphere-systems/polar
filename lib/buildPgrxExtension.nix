@@ -108,11 +108,14 @@ craneLib.mkCargoDerivation (
 
       cp -r ${src}/${name}.control $out/share/extension/
 
-      if [ -d "${src}/sql" ] && [ "$(ls -A \"${src}/sql/*.sql\")" ]; then
+      if [ -d "${src}/sql" ]; then
+        if [ "$(ls -A \"${src}/sql/*.sql\")" ]; then
           cp -r ${src}/sql/*.sql $out/share/extension
+        else
+          echo "${src}/sql was empty"
+        fi
       else
         echo "${src}/sql was not found"
-        exit 1
       fi
 
       rm -rfv $out/nix
