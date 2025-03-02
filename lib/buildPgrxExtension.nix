@@ -43,8 +43,8 @@ let
 
     cp -r -L ${postgresql}/. $PGRX_HOME/${postgresMajor}/
     cp -r -L ${postgresql.dev}/. $PGRX_HOME/${postgresMajor}/dev
-    chmod -R ugo+w $PGRX_HOME/${postgresMajor}
     cp -r -L ${postgresql.lib}/lib/. $PGRX_HOME/${postgresMajor}/lib/
+    chmod -R ugo+w $PGRX_HOME/${postgresMajor}
 
     ${cargo-pgrx}/bin/cargo-pgrx pgrx init \
       --pg${postgresMajor} $PGRX_HOME/${postgresMajor}/dev/bin/pg_config \
@@ -95,18 +95,20 @@ craneLib.mkCargoDerivation (
     '';
 
     postInstall = ''
-      mkdir -p $out/lib
+      mkdir -p $out/lib/postgresql
+      mkdir -p $out/share/extension
 
       ${lib.optionalString stdenv.isDarwin ''
-        cp target/release/lib${name}.d $out/lib/${name}.d
-        cp target/release/lib${name}.dylib $out/lib/${name}.dylib
+        cp target/release/lib${name}.dylib $out/lib/postgresql/${name}.dylib
       ''}
 
       ${lib.optionalString stdenv.isLinux ''
         cp target/release/lib${name}.so $out/lib/${name}.so
       ''}
 
-      # mv -v $out/${postgresql.out}/* $out
+      cp ${src}/${name}.control $out/share/extension
+      cp ${src}/sql/*.sql $out/share/extension
+
       rm -rfv $out/nix
     '';
   }
