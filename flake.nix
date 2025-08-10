@@ -11,6 +11,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    affinity.url = "github:mrshmllow/affinity-nix";
+
     utils.url = "github:numtide/flake-utils";
   };
 
