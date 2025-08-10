@@ -47,7 +47,12 @@
       }
     )
     // {
-      overlays.default = import ./overlay inputs { inherit (nixpkgs) lib; };
       lib = import ./lib inputs;
+      overlays.default = import ./overlay inputs { inherit (nixpkgs) lib; };
+      nixosModules.default =
+        { ... }:
+        {
+          nixpkgs.overlays = [ self.overlays.default ];
+        };
     };
 }
