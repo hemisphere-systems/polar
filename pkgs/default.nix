@@ -1,10 +1,11 @@
-{ affinity, ... }@inputs:
+{ unstable, ... }@inputs:
 { pkgs, ... }@args:
 
+let
+  unstable = unstable.legacyPackages.${pkgs.system};
+in
 {
-  cargo-pgrx = import ./cargo-pgrx.nix inputs args;
+  #inherit (unstable) _1password-gui _1password-cli;
 
-  affinity-designer = affinity.packages.${pkgs.system}.designer;
-  affinity-photo = affinity.packages.${pkgs.system}.photo;
-  affinity-publisher = affinity.packages.${pkgs.system}.publisher;
+  cargo-pgrx = import ./cargo-pgrx.nix inputs args;
 }

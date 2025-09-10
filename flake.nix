@@ -2,16 +2,15 @@
   description = "Polar is a Hemisphere's Nix Overlay and Package Distribution Mechanism";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    unstable.url = "nixpkgs/nixpkgs-unstable";
+    unfree.url = "github:numtide/nixpkgs-unfree";
 
     crane.url = "github:ipetkov/crane";
 
     rust = {
       url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
-
-    affinity.url = "github:mrshmllow/affinity-nix";
 
     utils.url = "github:numtide/flake-utils";
   };
@@ -20,7 +19,7 @@
     {
       self,
       utils,
-      nixpkgs,
+      unstable,
       ...
     }@inputs:
 
@@ -28,12 +27,13 @@
       system:
 
       let
-        pkgs = import nixpkgs {
+        pkgs = import unstable {
           inherit system;
           overlays = [ self.overlays.default ];
+          config.allowUnfree = true;
         };
 
-        lib = nixpkgs.lib;
+        lib = unstable.lib;
 
         args = { inherit pkgs lib system; };
 
@@ -48,7 +48,7 @@
     )
     // {
       lib = import ./lib inputs;
-      overlays.default = import ./overlay inputs { inherit (nixpkgs) lib; };
+      overlays.default = import ./overlay inputs { inherit (unstable) lib; };
       nixosModules.default =
         { ... }:
         {
