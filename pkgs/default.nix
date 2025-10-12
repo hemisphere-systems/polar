@@ -1,11 +1,11 @@
-{ unstable, ... }@inputs:
+{ ... }@inputs:
 { pkgs, ... }@args:
 
 let
-  unstable = unstable.legacyPackages.${pkgs.system};
+  unfree = inputs.unfree.legacyPackages.${pkgs.system};
 in
 {
-  #inherit (unstable) _1password-gui _1password-cli;
+  inherit (unfree) _1password-gui _1password-cli;
 
   cargo-pgrx = import ./cargo-pgrx.nix inputs args;
 }

@@ -3,7 +3,11 @@
 
   inputs = {
     unstable.url = "nixpkgs/nixpkgs-unstable";
-    unfree.url = "github:numtide/nixpkgs-unfree";
+
+    unfree = {
+      url = "github:numtide/nixpkgs-unfree";
+      inputs.nixpkgs.follows = "unstable";
+    };
 
     crane.url = "github:ipetkov/crane";
 
